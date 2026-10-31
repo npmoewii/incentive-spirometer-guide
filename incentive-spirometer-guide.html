@@ -1,0 +1,605 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ฝึกใช้เครื่องบริหารปอด</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;600&display=swap">
+<style>
+/* Layout: ตั้งค่า 2 คอลัมน์บนจอกว้าง / การฝึกแบ่งซ้าย (เครื่อง 3 ลูกบอล) ขวา (ตัวนับ + จังหวะ) บนจอแนวนอน และเรียงลงบนมือถือ */
+:root {
+  --bg: #EEF5F6;
+  --surface: #FFFFFF;
+  --ink: #102A33;
+  --ink-2: #44606A;
+  --line: #C3D6DB;
+  --accent: #0A6E7E;
+  --accent-soft: #DDF1F4;
+  --on-accent: #FFFFFF;
+  --focus: #D97C00;
+  --danger: #B3261E;
+  --device: #FFFFFF;
+  --chamber: #E3F0F3;
+  --inhale: #0A6E7E;  --inhale-soft: #DDF1F4;
+  --exhale: #4F5FA8;  --exhale-soft: #E4E7F6;
+  --hold: #A35F08;    --hold-soft: #FBEBD3;
+  --rest: #2B7A4B;    --rest-soft: #DDF0E4;
+  --font-display: "Prompt", "Noto Sans Thai", "Leelawadee UI", "Tahoma", sans-serif;
+  --font-body: "Sarabun", "Noto Sans Thai", "Leelawadee UI", "Tahoma", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B1A1F; --surface: #13272E; --ink: #EAF4F6; --ink-2: #A3BDC5; --line: #2A4650;
+    --accent: #5CC8D8; --accent-soft: #12383F; --on-accent: #05222A; --focus: #FFB84D; --danger: #FF8A80;
+    --device: #1A3640; --chamber: #0E2128;
+    --inhale: #5CC8D8; --inhale-soft: #12383F;
+    --exhale: #A9B4F2; --exhale-soft: #232A4D;
+    --hold: #F0B04A;   --hold-soft: #3D2D12;
+    --rest: #7FD6A0;   --rest-soft: #153424;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B1A1F; --surface: #13272E; --ink: #EAF4F6; --ink-2: #A3BDC5; --line: #2A4650;
+  --accent: #5CC8D8; --accent-soft: #12383F; --on-accent: #05222A; --focus: #FFB84D; --danger: #FF8A80;
+  --device: #1A3640; --chamber: #0E2128;
+  --inhale: #5CC8D8; --inhale-soft: #12383F;
+  --exhale: #A9B4F2; --exhale-soft: #232A4D;
+  --hold: #F0B04A;   --hold-soft: #3D2D12;
+  --rest: #7FD6A0;   --rest-soft: #153424;
+  color-scheme: dark;
+}
+
+html { font-size: clamp(17px, calc(0.9vw + 1.3vh + 6px), 34px); }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 1rem; line-height: 1.5;
+  padding-block: 1rem 2rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 74rem; margin: 0 auto; display: grid; gap: 1.25rem; }
+h1, h2 { font-family: var(--font-display); margin: 0; text-wrap: balance; }
+p { margin: 0; }
+
+/* header */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; }
+.brand { font: 700 1.2rem/1.2 var(--font-display); color: var(--accent); }
+.toggles { display: flex; flex-wrap: wrap; gap: .5rem; }
+.tgl {
+  font: 600 .95rem/1.2 var(--font-display); min-height: 2.8rem; padding: .4rem .9rem;
+  border-radius: 99px; border: .12rem solid var(--line); background: var(--surface); color: var(--ink);
+  display: inline-flex; align-items: center; gap: .5rem; cursor: pointer;
+}
+.tgl::before { content: ""; width: 1.1rem; height: 1.1rem; border-radius: 50%; border: .15rem solid var(--ink-2); box-sizing: border-box; }
+.tgl[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.tgl[aria-pressed="true"]::before { background: var(--accent); border-color: var(--accent); }
+.hint-small { font-size: .95rem; color: var(--ink-2); }
+.tgl.plain::before { display: none; }
+
+/* buttons */
+.btn {
+  font: 600 1.15rem/1.2 var(--font-display); min-height: 3.4rem; padding: .7rem 1.3rem;
+  border-radius: 1rem; border: .15rem solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer;
+}
+.btn.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.btn.xl { font-size: 1.5rem; min-height: 4.2rem; width: 100%; }
+.btn.danger { color: var(--danger); border-color: var(--danger); }
+.btn:focus-visible, .tgl:focus-visible, .round:focus-visible, .seg:focus-visible { outline: .3rem solid var(--focus); outline-offset: .2rem; }
+.btn:active, .round:active { transform: scale(.98); }
+
+/* setup */
+.setup-grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); align-items: start; }
+.intro { display: grid; gap: 1rem; min-width: 0; }
+.intro h1 { font-size: 2rem; line-height: 1.25; }
+.lead { font-size: 1.2rem; color: var(--ink-2); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: .8rem; align-items: start; font-size: 1.15rem; }
+.steps li::before {
+  content: counter(s); width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--accent); color: var(--on-accent);
+  display: grid; place-items: center; font: 700 1.2rem/1 var(--font-display);
+}
+.steps b { font-weight: 600; }
+.note { padding: .9rem 1rem; border-radius: 1rem; background: var(--hold-soft); color: var(--ink); font-size: 1rem; border-left: .35rem solid var(--hold); }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 1.4rem; padding: 1.25rem; display: grid; gap: 1rem; min-width: 0; }
+.panel h2 { font-size: 1.5rem; }
+.field { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
+.field .lab { flex: 1 1 11rem; min-width: 0; }
+.field .lab b { display: block; font: 600 1.15rem/1.3 var(--font-display); }
+.field .lab span { font-size: .95rem; color: var(--ink-2); }
+.stepper { display: flex; align-items: center; gap: .5rem; }
+.round {
+  width: 3.4rem; height: 3.4rem; border-radius: 50%; border: .15rem solid var(--accent); background: var(--accent-soft); color: var(--accent);
+  font: 700 1.8rem/1 var(--font-display); cursor: pointer; display: grid; place-items: center; padding: 0;
+}
+.val { min-width: 6.2rem; text-align: center; font: 700 1.7rem/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
+.val small { display: block; font: 400 .9rem/1.2 var(--font-body); color: var(--ink-2); }
+.modes { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); }
+.seg {
+  text-align: left; padding: .8rem 1rem; border-radius: 1rem; border: .15rem solid var(--line); background: var(--surface); color: var(--ink);
+  font: 400 .95rem/1.35 var(--font-body); cursor: pointer;
+}
+.seg b { display: block; font: 600 1.15rem/1.3 var(--font-display); }
+.seg[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 .1rem var(--accent); }
+.summary { text-align: center; color: var(--ink-2); font-size: 1.05rem; }
+.summary b { color: var(--ink); font-family: var(--font-display); }
+
+/* training */
+.stage {
+  --phase: var(--inhale); --phase-soft: var(--inhale-soft);
+  background: var(--phase-soft); border-radius: 1.6rem; padding: 1.1rem;
+  display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr);
+}
+.stage[data-phase="exhale"] { --phase: var(--exhale); --phase-soft: var(--exhale-soft); }
+.stage[data-phase="inhale"] { --phase: var(--inhale); --phase-soft: var(--inhale-soft); }
+.stage[data-phase="hold"]   { --phase: var(--hold);   --phase-soft: var(--hold-soft); }
+.stage[data-phase="rest"]   { --phase: var(--rest);   --phase-soft: var(--rest-soft); }
+@media (min-aspect-ratio: 5/4) {
+  .stage { grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); align-items: center; gap: 1.5rem; padding: 1.5rem; }
+}
+.device { display: grid; place-items: center; min-width: 0; }
+.device svg { width: 100%; height: auto; max-height: 27vh; }
+@media (min-aspect-ratio: 5/4) { .device svg { max-height: 68vh; } }
+.info { display: grid; gap: .8rem; min-width: 0; }
+.counters { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+.count { background: var(--surface); border-radius: 1.1rem; padding: .5rem 1rem .6rem; min-width: 0; }
+.count .lbl { font: 600 1rem/1.3 var(--font-display); color: var(--ink-2); }
+[hidden] { display: none !important; }
+.count .num { font: 700 3rem/1.05 var(--font-display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.count .num i { font: 600 1.3rem/1 var(--font-display); font-style: normal; color: var(--ink-2); margin-left: .25rem; }
+.dots { display: flex; flex-wrap: wrap; gap: .45rem; min-height: 1.1rem; }
+.dot { width: 1rem; height: 1rem; border-radius: 50%; border: .17rem solid var(--phase); box-sizing: border-box; background: transparent; }
+.dot.done { background: var(--phase); }
+.dot.cur { animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { transform: scale(1.35); } }
+.phase h2 { font-size: 2.6rem; line-height: 1.15; color: var(--phase); }
+.phase p { font-size: 1.25rem; margin-top: .3rem; }
+.clock { display: flex; align-items: baseline; gap: .6rem; }
+.clock #clockNum { font: 700 6rem/1 var(--font-display); font-variant-numeric: tabular-nums; color: var(--ink); min-width: 1.2ch; }
+.clock .unit { font: 600 1.3rem/1 var(--font-display); color: var(--ink-2); }
+.bar { height: 1rem; border-radius: 99px; background: var(--surface); overflow: hidden; }
+.bar span { display: block; height: 100%; width: 100%; background: var(--phase); transform-origin: left center; transform: scaleX(0); }
+.controls { display: flex; flex-wrap: wrap; gap: .7rem; }
+.controls .btn { flex: 1 1 11rem; }
+.controls #btnAction { flex-basis: 100%; font-size: 1.5rem; min-height: 4.2rem; }
+.confirm { background: var(--surface); border-radius: 1.1rem; padding: 1rem; display: grid; gap: .8rem; border: .15rem solid var(--danger); }
+.confirm p { font: 600 1.2rem/1.3 var(--font-display); }
+.confirm div { display: flex; flex-wrap: wrap; gap: .7rem; }
+.confirm .btn { flex: 1 1 10rem; }
+.stage.paused .phase h2, .stage.paused .clock { opacity: .55; }
+
+/* done */
+.done { max-width: 40rem; margin: 2rem auto 0; background: var(--surface); border: 1px solid var(--line); border-radius: 1.6rem; padding: 1.75rem; display: grid; gap: 1rem; }
+.done h1 { font-size: 2.2rem; color: var(--rest); }
+.done .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: .7rem; }
+.done .stat { background: var(--rest-soft); border-radius: 1rem; padding: .7rem 1rem; }
+.done .stat b { display: block; font: 700 2.4rem/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
+.done .stat span { color: var(--ink-2); font-size: 1rem; }
+.done .row { display: grid; gap: .7rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dot.cur { animation: none; }
+  .btn:active, .round:active { transform: none; }
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">ฝึกบริหารปอด</div>
+    <div class="toggles">
+      <button class="tgl" id="tglBeep" type="button" aria-pressed="true">เสียงติ๊ก</button>
+      <button class="tgl" id="tglVoice" type="button" aria-pressed="true">เสียงพูดนำ</button>
+    </div>
+  </header>
+  <div class="toggles"><button class="tgl plain" id="btnTestVoice" type="button">ทดสอบเสียงพูด</button></div>
+  <p class="hint-small" id="voiceHint" hidden>เครื่องนี้ยังไม่มีเสียงพูดภาษาไทย จะใช้เสียงติ๊กและตัวเลขบนหน้าจอแทน</p>
+
+  <main>
+    <!-- ตั้งค่า -->
+    <section id="vSetup" aria-label="ตั้งค่าการฝึก">
+      <div class="setup-grid">
+        <div class="intro">
+          <h1>ฝึกใช้เครื่องดูดบริหารปอด</h1>
+          <p class="lead">ทำตามตัวเลขและเสียงบนหน้าจอ ทีละขั้น ไม่ต้องจำเอง</p>
+          <ol class="steps">
+            <li><span><b>นั่งตัวตรง</b> ถือเครื่องให้ตั้งตรงอยู่ระดับสายตา</span></li>
+            <li><span><b>หายใจออกให้หมด</b> แล้วอมปากเป่าให้แน่นรอบปากเป่า</span></li>
+            <li><span><b>ดูดลมเข้าช้าๆ ลึกๆ</b> ให้ลูกบอลลอยขึ้น พยายามให้ลอยค้างอยู่</span></li>
+            <li><span><b>กลั้นลมไว้</b> ตามเวลาที่ตั้ง แล้วถอดปากออก หายใจตามปกติ</span></li>
+          </ol>
+          <p class="note">ถ้ารู้สึกเวียนศีรษะ หน้ามืด หรือเหนื่อยมาก ให้หยุดพักทันที จำนวนครั้งและเซตให้ตั้งตามที่แพทย์หรือพยาบาลแนะนำ</p>
+        </div>
+
+        <div class="panel">
+          <h2>ตั้งค่าการฝึก</h2>
+          <div id="fields"></div>
+          <div>
+            <b style="font:600 1.15rem/1.3 var(--font-display)">จังหวะการดูดลม</b>
+            <div class="modes" style="margin-top:.5rem">
+              <button class="seg" id="modeGuide" type="button" aria-pressed="true"><b>นำจังหวะให้</b>แอปนับเวลาดูดลมให้ 4 วินาที</button>
+              <button class="seg" id="modeSelf" type="button" aria-pressed="false"><b>ดูดเองตามสบาย</b>ดูดเสร็จแล้วกดปุ่มเอง</button>
+            </div>
+          </div>
+          <p class="summary" id="summary"></p>
+          <button class="btn primary xl" id="btnStart" type="button">เริ่มฝึก</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ฝึก -->
+    <section id="vTrain" hidden aria-label="กำลังฝึก">
+      <div class="stage" id="stage" data-phase="exhale">
+        <div class="device" aria-hidden="true">
+          <svg viewBox="0 0 260 350" role="img" aria-label="เครื่องบริหารปอด 3 ลูกบอล">
+            <rect x="20" y="10" width="220" height="270" rx="22" fill="var(--device)" stroke="var(--line)" stroke-width="3"/>
+            <rect x="38" y="28" width="56" height="232" rx="12" fill="var(--chamber)"/>
+            <rect x="102" y="28" width="56" height="232" rx="12" fill="var(--chamber)"/>
+            <rect x="166" y="28" width="56" height="232" rx="12" fill="var(--chamber)"/>
+            <path d="M130 280 C130 335 190 300 222 332" fill="none" stroke="var(--line)" stroke-width="14" stroke-linecap="round"/>
+            <path d="M130 280 C130 335 190 300 222 332" fill="none" stroke="var(--chamber)" stroke-width="8" stroke-linecap="round"/>
+            <rect x="206" y="322" width="46" height="20" rx="10" fill="var(--accent)"/>
+            <circle id="ball0" cx="66" cy="234" r="20" fill="var(--phase)"/>
+            <circle id="ball1" cx="130" cy="234" r="20" fill="var(--phase)"/>
+            <circle id="ball2" cx="194" cy="234" r="20" fill="var(--phase)"/>
+            <circle cx="60" cy="228" r="5" fill="#fff" opacity=".55" id="hl0"/>
+            <circle cx="124" cy="228" r="5" fill="#fff" opacity=".55" id="hl1"/>
+            <circle cx="188" cy="228" r="5" fill="#fff" opacity=".55" id="hl2"/>
+          </svg>
+        </div>
+
+        <div class="info">
+          <div class="counters">
+            <div class="count"><div class="lbl">เซตที่</div><div class="num"><span id="setNow">1</span><i>จาก <span id="setTot">3</span></i></div></div>
+            <div class="count"><div class="lbl">ครั้งที่</div><div class="num"><span id="repNow">1</span><i>จาก <span id="repTot">10</span></i></div></div>
+          </div>
+          <div class="dots" id="dots" aria-hidden="true"></div>
+          <div class="phase">
+            <h2 id="phaseName" aria-live="polite">หายใจออก</h2>
+            <p id="phaseHint"></p>
+          </div>
+          <div class="clock"><span id="clockNum">3</span><span class="unit">วินาที</span></div>
+          <div class="bar" aria-hidden="true"><span id="barFill"></span></div>
+          <div class="controls">
+            <button class="btn primary" id="btnAction" type="button" hidden>ดูดลมครบแล้ว</button>
+            <button class="btn" id="btnPause" type="button">หยุดชั่วคราว</button>
+            <button class="btn danger" id="btnStop" type="button">จบการฝึก</button>
+          </div>
+          <div class="confirm" id="confirm" hidden>
+            <p>จบการฝึกตอนนี้ใช่ไหม</p>
+            <div>
+              <button class="btn" id="btnKeep" type="button">ฝึกต่อ</button>
+              <button class="btn danger" id="btnEnd" type="button">จบการฝึก</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- เสร็จ -->
+    <section id="vDone" hidden aria-label="ฝึกครบแล้ว">
+      <div class="done">
+        <h1>ฝึกครบแล้ว</h1>
+        <p class="lead">พักหายใจสบายๆ ครั้งต่อไปฝึกตามเวลาที่แพทย์หรือพยาบาลแนะนำ</p>
+        <div class="stats">
+          <div class="stat"><b id="dReps">0</b><span>ครั้ง</span></div>
+          <div class="stat"><b id="dSets">0</b><span>เซต</span></div>
+          <div class="stat"><b id="dMin">0</b><span>นาที</span></div>
+        </div>
+        <div class="row">
+          <button class="btn primary xl" id="btnAgain" type="button">ฝึกอีกรอบ</button>
+          <button class="btn" id="btnBack" type="button">กลับไปตั้งค่า</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  var KEY = 'lung-trainer-v1';
+  var DEF = { reps: 10, sets: 3, hold: 3, rest: 5, setRest: 60, manual: false, beep: true, voice: true };
+  var FIELDS = [
+    { k: 'reps',    min: 3,  max: 20,  step: 1,  label: 'ครั้งต่อเซต',            sub: 'ดูดลมกี่ครั้งต่อหนึ่งเซต', unit: 'ครั้ง' },
+    { k: 'sets',    min: 1,  max: 6,   step: 1,  label: 'จำนวนเซต',               sub: 'ทำกี่เซตในรอบนี้',          unit: 'เซต' },
+    { k: 'hold',    min: 1,  max: 10,  step: 1,  label: 'กลั้นลมค้างไว้',          sub: 'หลังดูดลมเข้าเต็มที่',      unit: 'วินาที' },
+    { k: 'rest',    min: 3,  max: 20,  step: 1,  label: 'พักหายใจระหว่างครั้ง',     sub: 'ถอดปากออก หายใจตามปกติ',    unit: 'วินาที' },
+    { k: 'setRest', min: 15, max: 180, step: 15, label: 'พักระหว่างเซต',           sub: 'นั่งพักก่อนเริ่มเซตถัดไป',  unit: 'วินาที' }
+  ];
+  var EXHALE_SEC = 3, INHALE_SEC = 4, MANUAL_RISE = 5;
+
+  var cfg = {}; Object.keys(DEF).forEach(function (k) { cfg[k] = DEF[k]; });
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) {
+      var o = JSON.parse(raw);
+      Object.keys(DEF).forEach(function (k) { if (typeof o[k] === typeof DEF[k]) cfg[k] = o[k]; });
+    }
+  } catch (e) {}
+  FIELDS.forEach(function (f) { cfg[f.k] = Math.min(f.max, Math.max(f.min, cfg[f.k])); });
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(cfg)); } catch (e) {} }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var vSetup = $('vSetup'), vTrain = $('vTrain'), vDone = $('vDone'), stage = $('stage');
+
+  /* ---------- ตั้งค่า ---------- */
+  function buildFields() {
+    var box = $('fields');
+    FIELDS.forEach(function (f) {
+      var row = document.createElement('div');
+      row.className = 'field';
+      row.innerHTML =
+        '<div class="lab"><b>' + f.label + '</b><span>' + f.sub + '</span></div>' +
+        '<div class="stepper">' +
+        '<button class="round" type="button" data-k="' + f.k + '" data-d="-1" aria-label="ลด' + f.label + '">−</button>' +
+        '<div class="val" id="val-' + f.k + '" aria-live="polite"></div>' +
+        '<button class="round" type="button" data-k="' + f.k + '" data-d="1" aria-label="เพิ่ม' + f.label + '">+</button>' +
+        '</div>';
+      box.appendChild(row);
+    });
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-k]');
+      if (!b) return;
+      var f = FIELDS.filter(function (x) { return x.k === b.dataset.k; })[0];
+      cfg[f.k] = Math.min(f.max, Math.max(f.min, cfg[f.k] + f.step * Number(b.dataset.d)));
+      save(); renderSetup();
+    });
+  }
+  function holdSeconds() { return cfg.manual ? INHALE_SEC : INHALE_SEC; }
+  function renderSetup() {
+    FIELDS.forEach(function (f) {
+      $('val-' + f.k).innerHTML = cfg[f.k] + '<small>' + f.unit + '</small>';
+    });
+    $('modeGuide').setAttribute('aria-pressed', String(!cfg.manual));
+    $('modeSelf').setAttribute('aria-pressed', String(cfg.manual));
+    $('tglBeep').setAttribute('aria-pressed', String(cfg.beep));
+    $('tglVoice').setAttribute('aria-pressed', String(cfg.voice));
+    var per = EXHALE_SEC + holdSeconds() + cfg.hold + cfg.rest;
+    var total = cfg.reps * cfg.sets;
+    var secs = total * per + (cfg.sets - 1) * cfg.setRest - cfg.rest;
+    var min = Math.max(1, Math.round(secs / 60));
+    $('summary').innerHTML = 'รวม <b>' + total + ' ครั้ง</b> ใช้เวลาประมาณ <b>' + min + ' นาที</b>';
+  }
+  $('modeGuide').addEventListener('click', function () { cfg.manual = false; save(); renderSetup(); });
+  $('modeSelf').addEventListener('click', function () { cfg.manual = true; save(); renderSetup(); });
+  $('tglBeep').addEventListener('click', function () { cfg.beep = !cfg.beep; save(); renderSetup(); });
+  $('tglVoice').addEventListener('click', function () { cfg.voice = !cfg.voice; save(); renderSetup(); checkVoice(); });
+  $('btnTestVoice').addEventListener('click', function () {
+    ensureAudio(); beep(660, 0.3);
+    if (!('speechSynthesis' in window)) { showVoiceStatus('เบราว์เซอร์นี้ไม่รองรับเสียงพูด ใช้เสียงติ๊กแทน'); return; }
+    var tv = thaiVoice();
+    speak('ทดสอบเสียง หายใจออกให้หมด', true);
+    showVoiceStatus(tv.voice
+      ? 'พบเสียงภาษาไทย: ' + tv.voice.name + ' ถ้าไม่ได้ยิน ให้เพิ่มระดับเสียงของเครื่อง และปิดโหมดเงียบ'
+      : 'ไม่พบเสียงภาษาไทยในเครื่องนี้ ถ้าไม่ได้ยินเสียงพูด ให้ติดตั้งเสียงไทยในการตั้งค่าเครื่อง (Text-to-speech) หรือใช้เสียงติ๊กแทน');
+  });
+
+  /* ---------- เสียง ---------- */
+  var actx = null;
+  function ensureAudio() {
+    try {
+      if (!actx) { var A = window.AudioContext || window.webkitAudioContext; if (A) actx = new A(); }
+      if (actx && actx.state === 'suspended') actx.resume();
+    } catch (e) {}
+  }
+  function beep(freq, dur, delay) {
+    if (!cfg.beep || !actx) return;
+    try {
+      var t = actx.currentTime + (delay || 0);
+      var o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'sine'; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.7, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(actx.destination);
+      o.start(t); o.stop(t + dur + 0.05);
+    } catch (e) {}
+  }
+  function thaiVoice() {
+    try {
+      var vs = window.speechSynthesis.getVoices();
+      return { known: vs.length > 0, voice: vs.filter(function (v) { return /^th/i.test(v.lang); })[0] || null };
+    } catch (e) { return { known: true, voice: null }; }
+  }
+  function checkVoice() {
+    var hasSpeech = 'speechSynthesis' in window;
+    var tv = hasSpeech ? thaiVoice() : { known: true, voice: null };
+    var bad = cfg.voice && ((hasSpeech && tv.known && !tv.voice) || !hasSpeech);
+    if (bad) $('voiceHint').textContent = 'เครื่องนี้ไม่พบเสียงพูดภาษาไทย อาจไม่มีเสียงนำ ใช้เสียงติ๊กและตัวเลขบนหน้าจอแทนได้';
+    $('voiceHint').hidden = !bad;
+  }
+  var speakTimer = null;
+  function showVoiceStatus(msg) { $('voiceHint').textContent = msg; $('voiceHint').hidden = false; }
+  function speak(text, force) {
+    if ((!cfg.voice && !force) || !('speechSynthesis' in window)) return;
+    try {
+      var ss = window.speechSynthesis, tv = thaiVoice();
+      var go = function () {
+        try {
+          var u = new SpeechSynthesisUtterance(text);
+          u.lang = 'th-TH'; u.rate = 0.85; u.volume = 1; u.pitch = 1;
+          if (tv.voice) u.voice = tv.voice;
+          u.onerror = function (ev) {
+            if (ev && ev.error && ev.error !== 'canceled' && ev.error !== 'interrupted') showVoiceStatus('เสียงพูดใช้ไม่ได้บนเครื่องนี้ (' + ev.error + ')');
+          };
+          if (ss.paused) ss.resume();
+          ss.speak(u);
+        } catch (e) {}
+      };
+      clearTimeout(speakTimer);
+      if (ss.speaking || ss.pending) { ss.cancel(); speakTimer = setTimeout(go, 90); }
+      else go();
+    } catch (e) {}
+  }
+  if ('speechSynthesis' in window) {
+    try { window.speechSynthesis.addEventListener('voiceschanged', checkVoice); } catch (e) {}
+  }
+
+  /* ---------- wake lock ---------- */
+  var wl = null;
+  function lock() { try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(function (l) { wl = l; }, function () {}); } catch (e) {} }
+  function unlock() { try { if (wl) wl.release(); } catch (e) {} wl = null; }
+  document.addEventListener('visibilitychange', function () { if (S && !document.hidden) lock(); });
+
+  /* ---------- การฝึก ---------- */
+  var PH = {
+    exhale:  { name: 'หายใจออก',       hint: 'ผ่อนลมหายใจออกให้หมด แล้วอมปากเป่าให้แน่น', dp: 'exhale', tone: 520, say: 'หายใจออกให้หมด' },
+    inhale:  { name: 'ดูดลมเข้า',       hint: 'ดูดช้าๆ ลึกๆ ให้ลูกบอลลอยขึ้น',            dp: 'inhale', tone: 660, say: 'ดูดลมเข้าช้าๆ' },
+    hold:    { name: 'กลั้นลมไว้',       hint: 'อย่าเพิ่งหายใจออก ค้างไว้ให้ครบเวลา',       dp: 'hold',   tone: 880, say: 'กลั้นไว้' },
+    rest:    { name: 'พักหายใจ',         hint: 'ถอดปากออก หายใจเข้าออกตามปกติ',            dp: 'rest',   tone: 440, say: 'ถอดปากออก หายใจปกติ' },
+    setrest: { name: 'พักระหว่างเซต',    hint: 'นั่งพักสบายๆ แอปจะเริ่มเซตถัดไปให้เอง',     dp: 'rest',   tone: 392, say: 'พักสักครู่' }
+  };
+  var S = null, timer = null, raf = null;
+  var lv = [0, 0, 0], target = [0, 0, 0];
+  var BALL_BOTTOM = 234, BALL_TOP = 54;
+
+  function show(which) {
+    vSetup.hidden = which !== 'setup';
+    vTrain.hidden = which !== 'train';
+    vDone.hidden = which !== 'done';
+    $('voiceHint').hidden = which !== 'setup' ? true : $('voiceHint').hidden;
+  }
+  function focusSoon(el) { setTimeout(function () { try { el.focus(); } catch (e) {} }, 30); }
+
+  function startSession() {
+    ensureAudio(); lock();
+    var now = performance.now();
+    S = { set: 1, rep: 1, inSet: 0, done: 0, phase: 'exhale', elapsed: 0, dur: EXHALE_SEC, paused: false, last: now, active: 0 };
+    lv = [0, 0, 0]; target = [0, 0, 0];
+    $('setTot').textContent = cfg.sets; $('repTot').textContent = cfg.reps;
+    $('confirm').hidden = true;
+    show('train');
+    buildDots();
+    enterPhase('exhale');
+    clearInterval(timer); timer = setInterval(tick, 100);
+    cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
+  }
+  function buildDots() {
+    var d = $('dots'); d.innerHTML = '';
+    for (var i = 0; i < cfg.reps; i++) { var s = document.createElement('span'); s.className = 'dot'; d.appendChild(s); }
+  }
+  function phaseDur(ph) {
+    if (ph === 'exhale') return EXHALE_SEC;
+    if (ph === 'inhale') return cfg.manual ? null : INHALE_SEC;
+    if (ph === 'hold') return cfg.hold;
+    if (ph === 'rest') return cfg.rest;
+    return cfg.setRest;
+  }
+  function enterPhase(ph) {
+    S.phase = ph; S.elapsed = 0; S.dur = phaseDur(ph);
+    var p = PH[ph];
+    stage.dataset.phase = p.dp;
+    $('phaseName').textContent = p.name;
+    $('phaseHint').textContent = (ph === 'inhale' && cfg.manual) ? 'ดูดช้าๆ ลึกๆ พอดูดเต็มที่แล้วกดปุ่มด้านล่าง' : p.hint;
+    var act = $('btnAction');
+    if (ph === 'inhale' && cfg.manual) { act.hidden = false; act.textContent = 'ดูดลมครบแล้ว'; }
+    else if (ph === 'rest' || ph === 'setrest') { act.hidden = false; act.textContent = 'ข้ามการพัก เริ่มต่อเลย'; }
+    else act.hidden = true;
+    beep(p.tone, 0.2);
+    var say = p.say;
+    if (ph === 'exhale') say = (S.rep === 1 ? 'เซตที่ ' + S.set + ' ' : '') + 'ครั้งที่ ' + S.rep + ' ' + say;
+    speak(say);
+    render();
+  }
+  function nextPhase() {
+    var ph = S.phase;
+    if (ph === 'exhale') enterPhase('inhale');
+    else if (ph === 'inhale') enterPhase('hold');
+    else if (ph === 'hold') completeRep();
+    else if (ph === 'rest') { S.rep++; enterPhase('exhale'); }
+    else if (ph === 'setrest') { S.set++; S.rep = 1; S.inSet = 0; buildDots(); enterPhase('exhale'); }
+  }
+  function completeRep() {
+    S.done++; S.inSet++;
+    if (S.rep >= cfg.reps) {
+      if (S.set >= cfg.sets) { finish(); return; }
+      enterPhase('setrest');
+    } else enterPhase('rest');
+  }
+  function tick() {
+    var now = performance.now(), dt = now - S.last; S.last = now;
+    if (S.paused) return;
+    S.active += dt;
+    S.elapsed += dt / 1000;
+    if (S.dur !== null && S.elapsed >= S.dur) nextPhase();
+    else render();
+  }
+  function render() {
+    if (!S || S.phase === undefined) return;
+    $('setNow').textContent = S.set;
+    $('repNow').textContent = S.rep;
+    var dots = $('dots').children;
+    for (var i = 0; i < dots.length; i++) {
+      var cls = 'dot';
+      if (i < S.inSet) cls += ' done';
+      else if (i === S.inSet && S.phase !== 'setrest') cls += ' cur';
+      if (dots[i].className !== cls) dots[i].className = cls;
+    }
+    var ph = S.phase, shown, frac;
+    if (S.dur === null) { shown = Math.floor(S.elapsed); frac = Math.min(S.elapsed / MANUAL_RISE, 1); }
+    else { shown = Math.max(1, Math.ceil(S.dur - S.elapsed)); frac = Math.min(S.elapsed / S.dur, 1); }
+    $('clockNum').textContent = shown;
+    $('barFill').style.transform = 'scaleX(' + frac.toFixed(3) + ')';
+    var p = 0;
+    if (ph === 'inhale') p = S.dur === null ? Math.min(S.elapsed / MANUAL_RISE, 1) : Math.min(S.elapsed / S.dur, 1);
+    else if (ph === 'hold') p = 1;
+    for (var b = 0; b < 3; b++) target[b] = Math.max(0, Math.min(1, (p - b * 0.22) / 0.4));
+  }
+  var lastFrame = 0;
+  function frame(t) {
+    var dt = Math.min(0.1, (t - lastFrame) / 1000 || 0.016); lastFrame = t;
+    for (var b = 0; b < 3; b++) {
+      var k = target[b] >= lv[b] ? 9 : 4;
+      lv[b] += (target[b] - lv[b]) * Math.min(1, dt * k);
+      if (Math.abs(target[b] - lv[b]) < 0.002) lv[b] = target[b];
+      var cy = BALL_BOTTOM - (BALL_BOTTOM - BALL_TOP) * lv[b];
+      $('ball' + b).setAttribute('cy', cy.toFixed(1));
+      $('hl' + b).setAttribute('cy', (cy - 6).toFixed(1));
+    }
+    raf = requestAnimationFrame(frame);
+  }
+  function endLoop() {
+    clearInterval(timer); timer = null; cancelAnimationFrame(raf); raf = null;
+    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) {}
+    unlock();
+  }
+  function finish() {
+    var d = S.done, mins = Math.max(1, Math.round(S.active / 60000)), sets = S.set;
+    endLoop(); S = null;
+    $('dReps').textContent = d; $('dSets').textContent = sets; $('dMin').textContent = mins;
+    show('done');
+    beep(523, 0.2, 0); beep(659, 0.2, 0.22); beep(784, 0.35, 0.44);
+    speak('ฝึกครบแล้ว เก่งมากครับ');
+    focusSoon($('btnAgain'));
+  }
+  function toSetup() {
+    endLoop(); S = null; show('setup'); renderSetup(); checkVoice(); focusSoon($('btnStart'));
+  }
+
+  $('btnStart').addEventListener('click', startSession);
+  $('btnAgain').addEventListener('click', startSession);
+  $('btnBack').addEventListener('click', toSetup);
+  $('btnAction').addEventListener('click', function () { if (S) nextPhase(); });
+  $('btnPause').addEventListener('click', function () {
+    if (!S) return;
+    S.paused = !S.paused;
+    stage.classList.toggle('paused', S.paused);
+    $('btnPause').textContent = S.paused ? 'ทำต่อ' : 'หยุดชั่วคราว';
+    if (S.paused) { try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) {} }
+    else S.last = performance.now();
+  });
+  $('btnStop').addEventListener('click', function () {
+    if (!S) return;
+    if (!S.paused) $('btnPause').click();
+    $('confirm').hidden = false; focusSoon($('btnKeep'));
+  });
+  $('btnKeep').addEventListener('click', function () {
+    $('confirm').hidden = true;
+    if (S && S.paused) $('btnPause').click();
+    focusSoon($('btnPause'));
+  });
+  $('btnEnd').addEventListener('click', function () { stage.classList.remove('paused'); $('btnPause').textContent = 'หยุดชั่วคราว'; toSetup(); });
+
+  buildFields(); renderSetup(); checkVoice();
+  window.__lung = { start: startSession };
+})();
+</script>
+
+</body></html>
